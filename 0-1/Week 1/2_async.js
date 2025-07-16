@@ -32,3 +32,24 @@ for (let i = 0; i < 10; i++) {
     a+=i;
 }
 console.log(a);
+
+//with async and await
+function kiratsAsyncFunction() {
+  let p = new Promise(function(resolve) {
+    // do some async logic here
+    setTimeout(function(){
+      resolve("hi there!")
+    },2000)
+  });
+  return p;
+}
+
+async function main() {
+  //no callbacks, no .then syntax like we used in promises
+  let value = await kiratsAsyncFunction();
+  console.log('Radhe Radhe Shyam se Milade'); // will execute only after the await expression has resolved
+  console.log(value);
+}
+
+main();
+console.log('Kalki');
