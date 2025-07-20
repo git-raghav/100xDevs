@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+		<button onclick="getAnimals()">get animals</button>
+		<div id="container">yaha ayega sab data</div>
+		<script>
+			async function getAnimals() {
+				// const response = await fetch("https://fakerapi.it/api/v1/persons"); //response ~ raw format data
+				// const finalData = await response.json(); //finalData ~ JSON format data
+                // document.getElementById("container").innerHTML = JSON.stringify(finalData.data);
+
+                //can try this as well,just 1 line is enough no need to put the .json() line - using axios library - much simpler/cleaner syntax than fetch
+				const response = await axios.get('https://fakerapi.it/api/v1/persons');
+                console.log(response.data.data);
+			}
+		</script>
+	</body>
+</html>
+
+<!-- ❌ Limitations of plain forms/buttons app.get/post methods
+Only support GET and POST — you can’t do PUT, PATCH, DELETE easily.
+Always reload the page (unless you prevent it with JS).
+Harder to work with dynamically — e.g., sending data from a JS variable or responding to an event.
+Can’t easily handle JSON — forms submit URL-encoded data, not JSON.
+Can't dynamically fetch or update data without reloading.
+
+✅ What fetch() enables
+Works with all HTTP methods (GET, POST, PUT, DELETE, etc.)
+No page reload (AJAX-style)
+Send and receive JSON easily
+Allows dynamic interactions:
+Load more posts on scroll
+Submit a form and show a success message inline
+Validate input on the fly
+Build SPA (Single Page Applications) -->
