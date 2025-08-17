@@ -1,83 +1,57 @@
-const { Router } = require("express");
-const adminMiddleware = require("../middleware/admin");
-const { Admin, Course } = require("../db/index");
-const router = Router();
+const express = require("express");
+const router = express.Router();
+const { isAdmin } = require("../middleware/admin.js");
+const { Admin, Course } = require("../db/index.js");
 
-// const express = require("express");
-// const adminMiddleware = require("../middleware/admin");
-// const router = express.Router();
+//admin/signup
+router.post("/signup", async (req, res) => {
+	try {
+		const { username, password } = req.body;
 
-// Admin Routes
-//so this basically handles requests coming to /admin/signup
-router.post('/signup', (req, res) => {
-    // Implement admin signup logic
-    const username = req.body.username;
-    const password = req.body.password;
+		// check if user already exists
+		const existingAdmin = await Admin.findOne({ username });
+		if (existingAdmin) {
+			return res.status(400).json({ message: "Username already exists" });
+		}
 
-    // check if user with this 'username' already exists ~ for now assume that user always sends a unique username
-    Admin.create({
-        username: username,
-        password: password
-    }).then(function () {
-        res.json({
-            message: 'Admin created successfully'
-        })
-    }).catch(function () {
-        res.json({
-            message: 'Error encountered'
-        })
-    })
+		await Admin.create({
+			username: username,
+			password: password,
+		});
+
+		res.status(201).json({ message: "Admin created successfully" });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Error creating admin", error: error.message });
+	}
 });
 
-// ~ admin/courses - POST
-router.post('/courses', adminMiddleware, async (req, res) => {
-    // Implement course creation logic
-    const title = req.body.title;
-    const description = req.body.description;
-    const price = req.body.price;
-    const imageLink = req.body.imageLink;
+//admin/courses - POST
+router.post("/courses", isAdmin, async (req, res) => {
+	try {
+		const { title, description, price, imageLink } = req.body;
 
-    // const newCourse = Course.create({ //for this to work remove 'async' from top
-    //     title: title,
-    //     description: description,
-    //     price: price,
-    //     imageLink: imageLink
-    // }).then(function () {
-    //     res.json({
-    //         message: 'Course created successfully', courseId: newCourse._id
-    //     })
-    // })
+		const newCourse = await Course.create({
+			title: title,
+			description: description,
+			price: price,
+			imageLink: imageLink,
+		});
 
-    const newCourse = await Course.create({
-        title: title,
-        description: description,
-        price: price,
-        imageLink: imageLink
-    })
-    console.log(newCourse);
-    res.json({
-        message: 'Course created successfully', courseId: newCourse._id
-    })
-})
-
-// ~ admin/courses - GET
-router.get('/courses', adminMiddleware, async (req, res) => {
-    // Implement fetching all courses logic
-    const response = await Course.find({}); //Find all with no filtering conditions
-    console.log(response);
-    res.json({
-        courses: response
-    })
+        res.status(201).json({ message: "Course created successfully", courseId: newCourse._id });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Error creating course", error: error.message });
+	}
 });
 
-// router.get('/courses', adminMiddleware, (req, res) => {
-//     // Implement fetching all courses logic
-//     Course.find({}).then(function(response){
-//         console.log(response);
-//         res.json({
-//             courses: response
-//         })
-//     })
-// });
+//admin/courses - GET
+router.get("/courses", isAdmin, async (req, res) => {
+	// Implement fetching all courses logic
+	const response = await Course.find({}); //Find all with no filtering conditions
+	res.json({
+		courses: response,
+	});
+});
 
 module.exports = router;
