@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const adminMiddleware = require("../middleware/admin");
+const { isAdmin } = require("../middleware/admin");
 const router = Router();
 const jwt = require('jsonwebtoken');
 const { jwt_Password } = require('../config');
@@ -48,23 +48,13 @@ router.post('/signin', async (req, res) => {
       }
 });
 
-router.post('/courses', adminMiddleware, async (req, res) => {
+router.post('/courses', isAdmin, async (req, res) => {
     // Implement course creation logic
     const title = req.body.title;
     const description = req.body.description;
     const price = req.body.price;
     const imageLink = req.body.imageLink;
 
-    // const newCourse = Course.create({ //for this to work remove 'async' from top
-    //     title: title,
-    //     description: description,
-    //     price: price,
-    //     imageLink: imageLink
-    // }).then(function () {
-    //     res.json({
-    //         message: 'Course created successfully', courseId: newCourse._id
-    //     })
-    // })
 
     const newCourse = await Course.create({
         title: title,
@@ -78,7 +68,7 @@ router.post('/courses', adminMiddleware, async (req, res) => {
     })
 });
 
-router.get('/courses', adminMiddleware, async (req, res) => {
+router.get('/courses', isAdmin, async (req, res) => {
     // Implement fetching all courses logic
     const response = await Course.find({}); //Find all with no filtering conditions
     console.log(response);

@@ -1,10 +1,7 @@
-// Middleware for handling user authentication
 const jwt = require('jsonwebtoken');
 const { jwt_Password } = require('../config');
 
-function userMiddleware(req, res, next) {
-    // Implement user auth logic
-    // You need to check the headers and validate the user from the user DB. Check readme for the exact headers to be expected
+module.exports.isUser = async (req, res, next) => {
     const token = req.headers.authorization;
 
     //token ~ Bearer agdgvdggdgvdgvd => ["Bearer", "agdgvdggdgvdgvd"]
@@ -26,6 +23,4 @@ function userMiddleware(req, res, next) {
     catch (e) {
         console.log(e);
     }
-}
-
-module.exports = userMiddleware;
+};

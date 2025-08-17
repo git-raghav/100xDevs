@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const router = Router();
-const userMiddleware = require("../middleware/user");
+const { isUser } = require("../middleware/user");
 const jwt = require('jsonwebtoken');
 const { jwt_Password } = require('../config');
 const { User, Course } = require("../db/index");
@@ -56,7 +56,7 @@ router.get('/courses', async (req, res) => {
     })
 });
 
-router.post('/courses/:courseId', userMiddleware, (req, res) => {
+router.post('/courses/:courseId', isUser, (req, res) => {
     // Implement course purchase logic
     const courseId = req.params.courseId;
 
@@ -75,7 +75,7 @@ router.post('/courses/:courseId', userMiddleware, (req, res) => {
     })
 });
 
-router.get('/purchasedCourses', userMiddleware, async (req, res) => {
+router.get('/purchasedCourses', isUser, async (req, res) => {
     // Implement fetching purchased courses logic
     const user = await User.findOne({
         username: req.headers.username

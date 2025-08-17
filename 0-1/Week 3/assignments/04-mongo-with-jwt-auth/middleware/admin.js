@@ -1,10 +1,7 @@
-// Middleware for handling admin authentication
 const jwt = require('jsonwebtoken');
-const { jwt_Password } = require('../config');
+const { jwt_Password } = require('../config.js');
 
-function adminMiddleware(req, res, next) {
-    // Implement admin auth logic
-    // You need to check the headers and validate the admin from the admin DB. Check readme for the exact headers to be expected
+module.exports.isAdmin = async (req, res, next) => {
     const token = req.headers.authorization; // Bearer token
 
     //token ~ Bearer agdgvdggdgvdgvd => ["Bearer", "agdgvdggdgvdgvd"]
@@ -26,6 +23,4 @@ function adminMiddleware(req, res, next) {
     catch (e) {
         console.log(e);
     }
-}
-
-module.exports = adminMiddleware;
+};
