@@ -1,18 +1,24 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+	const [count, setCount] = useState(0);
 
-  return (
-    <>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-    </>
-  )
+	return (
+		<>
+			<CustomButton count={count} setCount={setCount} />
+		</>
+	);
 }
 
-export default App
+const CustomButton = ({ count, setCount }) => {
+	return (
+		<>
+			<div className="card">
+				<button onClick={() => setCount((curr) => curr + 1)}>count is {count}</button>
+			</div>
+		</>
+	);
+}
+
+export default App;
