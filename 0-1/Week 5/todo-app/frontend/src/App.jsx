@@ -5,10 +5,10 @@ import { Todos } from "./components/Todos";
 import axios from "axios";
 
 function App() {
-	let [todos, setTodos] = useState([]);
+	const [todos, setTodos] = useState([]);
 
 	const fetchTodos = async () => {
-		let res = await axios.get("http://localhost:3000/todos");
+		const res = await axios.get("http://localhost:3000/todos");
 		setTodos(res.data);
 	};
 
@@ -16,12 +16,22 @@ function App() {
 		fetchTodos();
 	}, []);
 
+	const handleComplete = async (id) => {
+		const res = await axios.put("http://localhost:3000/completed", {
+			_id: id,
+		});
+
+		setTodos((prevTodos) => prevTodos.map((todo) => (todo._id === id ? res.data : todo)));
+	};
+
 	return (
-		<>
-			<CreateTodo onAdd={(newTodo) => setTodos([...todos, newTodo])} />
-			<hr />
-			<Todos todos={todos} />
-		</>
+		<div className="app">
+			<div className="container">
+			    <CreateTodo onAdd={(newTodo) => setTodos((prevTodos) => [...prevTodos, newTodo])} />
+    			<hr className="divider" />
+    			<Todos todos={todos} onComplete={handleComplete} />
+			</div>
+		</div>
 	);
 }
 

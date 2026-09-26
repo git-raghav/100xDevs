@@ -12,6 +12,7 @@ const { validateCreateTodo, validateUpdateTodo } = require("./middleware.js");
 const Todo = require("./models/todo.js");
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: "http://localhost:5173"
 }));
@@ -41,19 +42,19 @@ async function main() {
 app.get("/todos", wrapAsync(async (req, res) => {
     const allTodos = await Todo.find({});
     // console.log(allTodos);
-    res.json(allTodos);
+    res.status(200).json(allTodos);
 }));
 
 app.post("/todo", validateCreateTodo, wrapAsync(async (req, res) => {
     // console.log(req.body);
-    await Todo.create(req.body);
-    res.json({ msg: "Todo created successfully" });
+    const newTodo = await Todo.create(req.body);
+    res.status(201).json(newTodo);
 }));
 
 app.put("/completed", validateUpdateTodo, wrapAsync(async (req, res) => {
     let id = req.body._id;
-    await Todo.findByIdAndUpdate(id, { completed: true });
-    res.json({ msg: "Todo updated successfully" });
+    const updatedTodo = await Todo.findByIdAndUpdate(id, { completed: true }, { new: true });
+    res.status(200).json(updatedTodo);
 }));
 
 // if no above route matches, this middleware will be called

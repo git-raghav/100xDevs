@@ -10,19 +10,17 @@ export function CreateTodo({ onAdd }) {
 			title,
 			description,
 		});
-
-		onAdd(res.data); // ✅ update parent state immediately
+		onAdd(res.data); // update parent state immediately
 		setTitle(""); // clear form
 		setDescription("");
 	}
 
 	return (
-		<div>
+		<div className="create-todo">
 			<h1>Create Todo</h1>
-			<input type="text" placeholder="title" value={title} onChange={(e) => setTitle(e.target.value)} /> <br /> <br />
-			<input type="text" placeholder="description" value={description} onChange={(e) => setDescription(e.target.value)} /> <br />{" "}
-			<br />
-			<button onClick={handleSubmit}>Submit</button>
+			<input className="todo-input" type="text" placeholder="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+			<input className="todo-input" type="text" placeholder="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+			<button className="create-button" onClick={handleSubmit}>Submit</button>
 		</div>
 	);
 }
