@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, useRef, memo } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef, memo, useActionState } from "react";
 import "./App.css";
 
 function App() {
@@ -6,6 +6,7 @@ function App() {
 	const [exchangeData1, setExchangeData1] = useState({});
 	const [exchangeData2, setExchangeData2] = useState({});
 	const [bankData, setBankData] = useState({});
+    const todos = useTodos();//custom hook
 
     //useEffect hook runs only on initial render, or when dependencies array content changes
     //useEffect dosen't return a value
@@ -62,6 +63,13 @@ function App() {
 			</section>
 		</>
 	);
+}
+
+//custom hooks, should start with use
+function useTodos() {
+    const [todos, setTodos] = useState([]);
+    //fetch logic
+    return todos;
 }
 
 const CryptoGainsCalc = memo(({ cryptoGains }) => {
