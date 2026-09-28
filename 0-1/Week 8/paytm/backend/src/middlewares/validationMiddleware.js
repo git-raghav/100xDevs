@@ -1,21 +1,32 @@
-const ExpressError = require("./utils/ExpressError.js"); // custom error class for Express
-const { createTodo, updateTodo } = require("./schema.js"); // importing the Joi schema for validation
+import ExpressError from "../utils/ExpressError.js"; // custom error class for Express
+import {
+	signupSchema,
+	editNameSchema,
+	editUserNameSchema,
+	verifySchema,
+	loginSchema,
+	forgetPasswordSchema,
+	resetPasswordSchema,
+	changePasswordSchema,
+	deleteSchema,
+} from "../utils/zodSchema.js";
 
-module.exports.validateCreateTodo = (req, res, next) => {
-    const result = createTodo.safeParse(req.body);
-    if (!result.success) {
-        throw new ExpressError(400, result.error);
-    } else {
-        next();
-    }
-};
+function validate(schema) {
+	return (req, res, next) => {
+		const result = schema.safeParse(req.body);
+		if (!result.success) {
+			throw new ExpressError(400, result.error.issues[0].message);
+		}
+		next();
+	};
+}
 
-module.exports.validateUpdateTodo = (req, res, next) => {
-    // console.log(req.body);
-    const result = updateTodo.safeParse(req.body);
-    if (!result.success) {
-        throw new ExpressError(400, result.error);
-    } else {
-        next();
-    }
-};
+export const validateUserSignup = validate(signupSchema);
+export const validateName = validate(editNameSchema);
+export const validateUsername = validate(editUserNameSchema);
+export const validateVerifyEmail = validate(verifySchema);
+export const validateUserLogin = validate(loginSchema);
+export const validateForgetPassword = validate(forgetPasswordSchema);
+export const validateResetPassword = validate(resetPasswordSchema);
+export const validateChangePassword = validate(changePasswordSchema);
+export const validateDeleteAccount = validate(deleteSchema);

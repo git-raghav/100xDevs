@@ -2,15 +2,21 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 const app = express();
+
 import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
+import passport from "./config/passport.js";
+import authRouter from "./routes/authRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import ExpressError from "./utils/ExpressError.js";
+import "./utils/cleanup.js";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
 app.use(cookieParser());
 app.use(cors({
     origin: "http://localhost:5173"
@@ -21,6 +27,7 @@ app.get("/api/v1/auth/health", (req, res) => {
 	res.json({ status: "ok" });
 });
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/user", userRouter);
 
 // if no above route matches, this middleware will be called
 app.all(/.*/, (req, res, next) => {
