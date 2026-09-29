@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import OtpCode from "./otpModel.js";
 import RefreshToken from "./refreshTokenModel.js";
+import Account from "./accountModel.js";
 
 const userSchema = new mongoose.Schema(
     {
@@ -74,12 +75,18 @@ const userSchema = new mongoose.Schema(
     }
 );
 
+userSchema.index({ firstName: 1 });
+userSchema.index({ lastName: 1 });
+
 userSchema.post("findOneAndDelete", async (user) => {
     if (!user) return;
     await OtpCode.deleteMany({
         userId: user._id
     });
     await RefreshToken.deleteMany({
+        userId: user._id
+    });
+    await Account.deleteMany({
         userId: user._id
     });
 });

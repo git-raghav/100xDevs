@@ -32,6 +32,11 @@ const otpCodeSchema = new mongoose.Schema(
     }
 );
 
-const OtpCode = mongoose.model("OtpCode", otpCodeSchema);
+otpCodeSchema.index({
+    userId: 1,
+    purpose: 1,
+    otpCode: 1
+});
 
+const OtpCode = mongoose.model("OtpCode", otpCodeSchema);
 export default OtpCode;

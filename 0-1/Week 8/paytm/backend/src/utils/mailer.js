@@ -97,3 +97,467 @@ support@Paytm.com
         console.error("Error sending OTP:", err);
     }
 }
+
+export async function sendAccountCreatedMail(to, balance) {
+
+    const subject = "Paytm - Account Created Successfully";
+
+    const formattedBalance = (balance / 100).toFixed(2);
+
+    const text = `
+Dear User,
+
+Your Paytm account has been created successfully.
+
+Your account is now ready to send and receive money securely.
+
+Account Status: Active
+Available Balance: ₹${formattedBalance}
+
+You can now use your Paytm account to make payments and transfer money to other users.
+
+Thank you for choosing Paytm.
+
+Sincerely,
+Paytm Security Team
+support@Paytm.com
+    `;
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>${subject}</title>
+</head>
+
+<body style="
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    margin: 0;
+    padding: 20px;
+">
+
+<table align="center" cellpadding="0" cellspacing="0" width="100%"
+       style="
+           max-width: 600px;
+           background: #ffffff;
+           border-radius: 8px;
+           overflow: hidden;
+       ">
+
+    <!-- Header -->
+    <tr>
+        <td style="
+            padding: 22px;
+            text-align: center;
+            background-color: #004aad;
+        ">
+            <h1 style="
+                color: #ffffff;
+                margin: 0;
+                font-size: 26px;
+            ">
+                Paytm
+            </h1>
+        </td>
+    </tr>
+
+    <!-- Content -->
+    <tr>
+        <td style="padding: 30px;">
+
+            <p style="
+                font-size: 16px;
+                color: #333333;
+                margin-top: 0;
+            ">
+                Dear User,
+            </p>
+
+            <p style="
+                font-size: 16px;
+                color: #333333;
+                line-height: 1.6;
+            ">
+                Your Paytm account has been created successfully.
+            </p>
+
+            <p style="
+                font-size: 16px;
+                color: #333333;
+                line-height: 1.6;
+            ">
+                Your account is now active and ready to securely
+                send and receive money.
+            </p>
+
+            <!-- Account Summary -->
+            <table width="100%" cellpadding="0" cellspacing="0"
+                   style="
+                       margin: 25px 0;
+                       background-color: #f4f6f8;
+                       border-radius: 8px;
+                   ">
+
+                <tr>
+                    <td style="
+                        padding: 20px;
+                        text-align: center;
+                    ">
+
+                        <p style="
+                            margin: 0 0 8px;
+                            font-size: 14px;
+                            color: #666666;
+                        ">
+                            Available Balance
+                        </p>
+
+                        <p style="
+                            margin: 0;
+                            font-size: 30px;
+                            font-weight: bold;
+                            color: #004aad;
+                        ">
+                            ₹${formattedBalance}
+                        </p>
+
+                        <p style="
+                            margin: 10px 0 0;
+                            font-size: 13px;
+                            color: #555555;
+                        ">
+                            Account Status: <strong>Active</strong>
+                        </p>
+
+                    </td>
+                </tr>
+
+            </table>
+
+            <p style="
+                font-size: 15px;
+                color: #555555;
+                line-height: 1.6;
+            ">
+                You can now use your account to make payments and
+                transfer money securely to other users.
+            </p>
+
+            <p style="
+                font-size: 14px;
+                color: #333333;
+                margin-top: 30px;
+                line-height: 1.6;
+            ">
+                Thank you for choosing Paytm.
+            </p>
+
+            <p style="
+                font-size: 14px;
+                color: #333333;
+                line-height: 1.6;
+            ">
+                Sincerely,<br/>
+                <strong>Paytm Team</strong><br/>
+                <a href="mailto:support@Paytm.com" style="color:#004aad; text-decoration:none;">support@Paytm.com</a>
+            </p>
+
+        </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+        <td style="
+            padding: 15px 30px;
+            background-color: #f4f6f8;
+            text-align: center;
+        ">
+            <p style="
+                margin: 0;
+                font-size: 12px;
+                color: #777777;
+            ">
+                This is an automated email. Please do not reply to this message.
+            </p>
+        </td>
+    </tr>
+
+</table>
+
+</body>
+</html>
+    `;
+
+    const mailOptions = {
+        from: `"Paytm Security Team" <${process.env.MAIL_USER}>`,
+        to: to,
+        subject: subject,
+        text: text,
+        html: html,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log("Account Creation Mail sent.");
+    } catch (err) {
+        console.error("Error sending mail:", err);
+    }
+}
+
+export async function sendMoneySentMail(
+    to,
+    receiverName,
+    amount
+) {
+
+    const subject = "Paytm - Money Sent Successfully";
+
+    const text = `
+Dear User,
+
+Your money transfer was successful.
+
+Amount: ₹${amount}
+Sent to: ${receiverName}
+
+The amount has been debited from your account.
+
+Thank you for using Paytm.
+
+Sincerely,
+Paytm Security Team
+support@Paytm.com
+    `;
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>${subject}</title>
+</head>
+
+<body style="font-family:Arial,sans-serif;background:#f4f6f8;margin:0;padding:20px;">
+
+<table align="center" cellpadding="0" cellspacing="0" width="100%"
+       style="max-width:600px;background:#ffffff;border-radius:8px;">
+
+<tr>
+    <td style="padding:20px;text-align:center;background:#004aad;border-radius:8px 8px 0 0;">
+        <h1 style="color:#ffffff;margin:0;">Paytm</h1>
+    </td>
+</tr>
+
+<tr>
+<td style="padding:30px;">
+
+    <p style="font-size:16px;color:#333;">
+        Dear User,
+    </p>
+
+    <p style="font-size:16px;color:#333;">
+        Your money transfer was successful.
+    </p>
+
+    <div style="
+        background:#f4f6f8;
+        padding:20px;
+        margin:20px 0;
+        border-radius:6px;
+    ">
+        <p><strong>Amount:</strong> ₹${amount}</p>
+        <p><strong>Sent to:</strong> ${receiverName}</p>
+    </div>
+
+    <p style="font-size:14px;color:#555;">
+        The amount has been debited from your account.
+    </p>
+
+    <p style="
+                font-size: 14px;
+                color: #333333;
+                margin-top: 30px;
+                line-height: 1.6;
+            ">
+                Thank you for choosing Paytm.
+            </p>
+
+            <p style="
+                font-size: 14px;
+                color: #333333;
+                line-height: 1.6;
+            ">
+                Sincerely,<br/>
+                <strong>Paytm Team</strong><br/>
+                <a href="mailto:support@Paytm.com" style="color:#004aad; text-decoration:none;">support@Paytm.com</a>
+            </p>
+
+</td>
+</tr>
+<!-- Footer -->
+    <tr>
+        <td style="
+            padding: 15px 30px;
+            background-color: #f4f6f8;
+            text-align: center;
+        ">
+            <p style="
+                margin: 0;
+                font-size: 12px;
+                color: #777777;
+            ">
+                This is an automated email. Please do not reply to this message.
+            </p>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
+    `;
+
+    const mailOptions = {
+        from: `"Paytm Security Team" <${process.env.MAIL_USER}>`,
+        to: to,
+        subject: subject,
+        text: text,
+        html: html,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log("Money Sent mail sent.");
+    } catch (err) {
+        console.error("Error sending mail:", err);
+    }
+}
+
+export async function sendMoneyReceivedMail(
+    to,
+    senderName,
+    amount
+) {
+
+    const subject = "Paytm - Money Received";
+
+    const text = `
+Dear User,
+
+You have received money in your Paytm account.
+
+Amount: ₹${amount}
+Received from: ${senderName}
+
+The amount has been credited to your account.
+
+Thank you for using Paytm.
+
+Sincerely,
+Paytm Security Team
+support@Paytm.com
+    `;
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>${subject}</title>
+</head>
+
+<body style="font-family:Arial,sans-serif;background:#f4f6f8;margin:0;padding:20px;">
+
+<table align="center" cellpadding="0" cellspacing="0" width="100%"
+       style="max-width:600px;background:#ffffff;border-radius:8px;">
+
+<tr>
+    <td style="padding:20px;text-align:center;background:#004aad;border-radius:8px 8px 0 0;">
+        <h1 style="color:#ffffff;margin:0;">Paytm</h1>
+    </td>
+</tr>
+
+<tr>
+<td style="padding:30px;">
+
+    <p style="font-size:16px;color:#333;">
+        Dear User,
+    </p>
+
+    <p style="font-size:16px;color:#333;">
+        You have received money in your Paytm account.
+    </p>
+
+    <div style="
+        background:#f4f6f8;
+        padding:20px;
+        margin:20px 0;
+        border-radius:6px;
+    ">
+        <p><strong>Amount:</strong> ₹${amount}</p>
+        <p><strong>Received from:</strong> ${senderName}</p>
+    </div>
+
+    <p style="font-size:14px;color:#555;">
+        The amount has been credited to your account.
+    </p>
+
+    <p style="
+                font-size: 14px;
+                color: #333333;
+                margin-top: 30px;
+                line-height: 1.6;
+            ">
+                Thank you for choosing Paytm.
+            </p>
+
+            <p style="
+                font-size: 14px;
+                color: #333333;
+                line-height: 1.6;
+            ">
+                Sincerely,<br/>
+                <strong>Paytm Team</strong><br/>
+                <a href="mailto:support@Paytm.com" style="color:#004aad; text-decoration:none;">support@Paytm.com</a>
+            </p>
+
+</td>
+</tr>
+<!-- Footer -->
+    <tr>
+        <td style="
+            padding: 15px 30px;
+            background-color: #f4f6f8;
+            text-align: center;
+        ">
+            <p style="
+                margin: 0;
+                font-size: 12px;
+                color: #777777;
+            ">
+                This is an automated email. Please do not reply to this message.
+            </p>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
+    `;
+
+    const mailOptions = {
+        from: `"Paytm Security Team" <${process.env.MAIL_USER}>`,
+        to: to,
+        subject: subject,
+        text: text,
+        html: html,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log("Money Received mail sent.");
+    } catch (err) {
+        console.error("Error sending mail:", err);
+    }
+}

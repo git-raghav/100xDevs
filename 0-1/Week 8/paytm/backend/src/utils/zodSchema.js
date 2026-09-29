@@ -70,3 +70,8 @@ export const changePasswordSchema = z.object({
 export const deleteSchema = z.object({
     password: passwordSchema
 });
+
+export const transferSchema = z.object({
+    to: z.string().regex(/^[a-f\d]{24}$/i, "Invalid recipient ID"),
+    amount: z.number().positive("Amount must be greater than 0").multipleOf(0.01, "Amount can have at most 2 decimal places")
+});

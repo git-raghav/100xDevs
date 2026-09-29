@@ -9,6 +9,7 @@ import {
 	resetPasswordSchema,
 	changePasswordSchema,
 	deleteSchema,
+    transferSchema,
 } from "../utils/zodSchema.js";
 
 function validate(schema) {
@@ -30,3 +31,4 @@ export const validateForgetPassword = validate(forgetPasswordSchema);
 export const validateResetPassword = validate(resetPasswordSchema);
 export const validateChangePassword = validate(changePasswordSchema);
 export const validateDeleteAccount = validate(deleteSchema);
+export const validateTransfer = validate(transferSchema);

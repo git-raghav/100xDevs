@@ -91,7 +91,6 @@ passport.use(
 					provider: "google",
 					googleId,
 					isVerified: true,
-					verifiedAt: new Date(),
 				});
 
 				return done(null, user);
