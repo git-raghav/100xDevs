@@ -4,7 +4,7 @@ import passport from 'passport';
 import wrapAsync from '../utils/wrapAsync.js';
 import { validateUserSignup, validateVerifyEmail, validateUserLogin, validateForgetPassword, validateResetPassword, validateChangePassword, validateDeleteAccount } from '../middlewares/validationMiddleware.js';
 import { authenticateToken } from '../middlewares/authMiddleware.js';
-import { signup, verifyEmail, loginSuccess, forgotPassword, resetPassword, changePassword, refreshToken, logout, deleteAccount } from '../controllers/authController.js';
+import { signup, verifyEmail, loginSuccess, forgotPassword, resetPassword, changePassword, refreshToken, logout, deleteAccount, getMe } from '../controllers/authController.js';
 
 router.post('/signup', validateUserSignup, wrapAsync(signup));
 router.post('/verify-email', validateVerifyEmail, wrapAsync(verifyEmail));
@@ -23,6 +23,6 @@ router.post('/refresh-token', wrapAsync(refreshToken));
 
 router.delete('/delete-account', validateDeleteAccount, authenticateToken, wrapAsync(deleteAccount));
 
-router.get('/me', authenticateToken, (req, res) => res.json({ userId: req.user.id, email: req.user.email }));
+router.get('/me', authenticateToken, wrapAsync(getMe));
 
 export default router;

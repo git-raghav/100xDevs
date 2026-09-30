@@ -3,6 +3,7 @@ import { generateToken } from "../utils/jwt.js";
 import { generateOtp, otpExpiry } from "../utils/otp.js";
 import { sendOtpMail } from "../utils/mailer.js";
 import User from "../models/userModel.js";
+import Account from "../models/accountModel.js";
 import OtpCode from "../models/otpModel.js";
 import RefreshToken from "../models/refreshTokenModel.js";
 import { generateRefreshToken, refreshTokenExpiry } from "../utils/refreshToken.js";
@@ -207,4 +208,23 @@ export async function deleteAccount(req, res) {
 		sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 	});
 	res.status(200).json({ message: "Account deleted successfully" });
+}
+
+// Get user details
+export async function getMe(req, res) {
+	const user = await User.findById(req.user.id).select("firstName lastName username email provider isVerified");
+	if (!user) return res.status(404).json({ message: "User not found" });
+
+	const hasWallet = Boolean(await Account.exists({ userId: user._id }));
+
+	res.status(200).json({
+		id: user._id,
+		firstName: user.firstName,
+		lastName: user.lastName,
+		username: user.username,
+		email: user.email,
+		provider: user.provider,
+		isVerified: user.isVerified,
+		hasWallet,
+	});
 }
