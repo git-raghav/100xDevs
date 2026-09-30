@@ -76,7 +76,7 @@ export async function loginSuccess(req, res) {
 	res.cookie("refreshToken", refreshToken, {
 		httpOnly: true,
 		secure: process.env.NODE_ENV === "production", // only https in prod
-		sameSite: "lax",
+		sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 		maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 	});
 
@@ -87,7 +87,7 @@ export async function loginSuccess(req, res) {
 export async function forgotPassword(req, res) {
 	const { email } = req.body;
 	const user = await User.findOne({ email });
-	if (!user) return res.status(400).json({ message: "If an account exists for this email, an OTP has been sent." });
+	if (!user) return res.status(200).json({ message: "If an account exists for this email, an OTP has been sent." });
 
     //Invalidate existing OTPs
     await OtpCode.deleteMany({userId: user._id, purpose: "reset_password"});
@@ -119,7 +119,7 @@ export async function resetPassword(req, res) {
 	if (!otpRecord) return res.status(400).json({ message: "Invalid or expired OTP" });
 
 	const hash = await bcrypt.hash(newPassword + pepper, 10);
-    await User.updateOne({ _id: user._id }, { $set: { passwordHash: hash } });
+    await User.updateOne({ _id: user._id }, { $set: { passwordHash: hash, passwordChangedAt: new Date() } });
 
     //Invalidate existing refresh tokens
     await RefreshToken.deleteMany({userId: user._id});
@@ -149,7 +149,7 @@ export async function changePassword(req, res) {
 
 	// Hash new password
 	const hash = await bcrypt.hash(newPassword + pepper, 10);
-	await User.updateOne({ _id: user._id }, { $set: { passwordHash: hash } });
+	await User.updateOne({ _id: user._id }, { $set: { passwordHash: hash, passwordChangedAt: new Date() } });
 
     //Invalidate existing refresh tokens
     await RefreshToken.deleteMany({userId: user._id});
@@ -180,7 +180,7 @@ export async function logout(req, res) {
 		res.clearCookie("refreshToken", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 	    });
 	}
 	res.json({ message: "Logged out successfully" });
@@ -204,7 +204,7 @@ export async function deleteAccount(req, res) {
 	res.clearCookie("refreshToken", {
 		httpOnly: true,
 		secure: process.env.NODE_ENV === "production",
-		sameSite: "lax",
+		sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 	});
 	res.status(200).json({ message: "Account deleted successfully" });
 }

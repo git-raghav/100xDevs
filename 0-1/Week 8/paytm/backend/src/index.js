@@ -20,11 +20,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(cookieParser());
 app.use(cors({
-    origin: "http://localhost:5173"
+    origin: "http://localhost:5173",
+    credentials: true
 }));
 
 // routes
 app.get("/api/v1/auth/health", (req, res) => {
+	res.json({ status: "ok" });
+});
+app.get("/api/v1/user/health", (req, res) => {
+	res.json({ status: "ok" });
+});
+app.get("/api/v1/account/health", (req, res) => {
 	res.json({ status: "ok" });
 });
 app.use("/api/v1/auth", authRouter);
