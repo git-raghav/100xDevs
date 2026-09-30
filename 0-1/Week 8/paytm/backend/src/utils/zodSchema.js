@@ -67,9 +67,14 @@ export const changePasswordSchema = z.object({
     newPassword: passwordSchema
 });
 
-export const deleteSchema = z.object({
-    password: passwordSchema
-});
+export const deleteSchema = z
+	.object({
+		password: passwordSchema.optional(),
+		confirm: z.literal(true).optional(),
+	})
+	.refine((data) => data.password || data.confirm === true, {
+		message: "Password or confirm is required",
+	});
 
 export const transferSchema = z.object({
     to: z.string().regex(/^[a-f\d]{24}$/i, "Invalid recipient ID"),

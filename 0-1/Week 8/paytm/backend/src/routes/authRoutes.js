@@ -5,7 +5,7 @@ import wrapAsync from '../utils/wrapAsync.js';
 import { validateUserSignup, validateVerifyEmail, validateUserLogin, validateForgetPassword, validateResetPassword, validateChangePassword, validateDeleteAccount } from '../middlewares/validationMiddleware.js';
 import { authenticateToken } from '../middlewares/authMiddleware.js';
 import { loginLimiter, otpLimiter } from "../middlewares/rateLimiter.js";
-import { signup, verifyEmail, loginSuccess, forgotPassword, resetPassword, changePassword, refreshToken, logout, deleteAccount, getMe } from '../controllers/authController.js';
+import { signup, verifyEmail, loginSuccess, googleLoginSuccess, forgotPassword, resetPassword, changePassword, refreshToken, logout, deleteAccount, getMe } from '../controllers/authController.js';
 
 router.post('/signup', otpLimiter, validateUserSignup, wrapAsync(signup));
 router.post('/verify-email', otpLimiter, validateVerifyEmail, wrapAsync(verifyEmail));
@@ -18,7 +18,7 @@ router.post('/reset-password', otpLimiter, validateResetPassword, wrapAsync(rese
 router.post('/change-password', validateChangePassword, authenticateToken, wrapAsync(changePassword));
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/google/callback', passport.authenticate('google', { session: false, failWithError: true }), wrapAsync(loginSuccess));
+router.get('/google/callback', passport.authenticate('google', { session: false, failureRedirect: `${process.env.CLIENT_URL}?google=failed`, }), wrapAsync(googleLoginSuccess));
 
 router.post('/refresh-token', wrapAsync(refreshToken));
 

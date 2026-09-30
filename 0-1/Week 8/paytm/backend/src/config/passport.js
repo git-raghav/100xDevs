@@ -9,7 +9,7 @@ const pepper = process.env.PEPPER;
 
 // Generate a unique username
 async function generateUniqueUsername(firstName, lastName) {
-	const base = `${firstName}${lastName}`.toLowerCase().replace(/[^a-z0-9]/g, "");
+	const base = `${firstName}${lastName}`.toLowerCase().replace(/[^a-z0-9]/g, "") || "user";
 	let username = base;
 	let counter = 1;
 	while (await User.exists({ username })) {
@@ -27,6 +27,9 @@ passport.use(
 			if (!user || !user.isVerified) {
 				return done(null, false, { message: "Invalid credentials or not verified" });
 			}
+            if (user.provider !== "local" || !user.passwordHash) {
+                return done(null, false, { message: "Invalid credentials or not verified" });
+            }
 
 			const match = await bcrypt.compare(password + pepper, user.passwordHash);
 			if (!match) {
@@ -52,17 +55,15 @@ passport.use(
 		async (accessToken, refreshToken, profile, done) => {
 			try {
 				const googleId = profile.id;
-				const email = profile.emails[0].value.toLowerCase();
+				const email = profile.emails?.[0]?.value?.toLowerCase();
+		        if (!email) return done(null, false, { message: "Google account has no email" });
 
-				const firstName = profile.name?.givenName || "";
-				const lastName = profile.name?.familyName || "";
+				const firstName = profile.name?.givenName || "User";
+				const lastName = profile.name?.familyName || "Google";
 
 				// 1. Check Google ID
 				let user = await User.findOne({ googleId });
-
-				if (user) {
-					return done(null, user);
-				}
+				if (user) return done(null, user);
 
 				// 2. Check email
 				user = await User.findOne({ email });
@@ -74,7 +75,6 @@ passport.use(
 							message: "An account with this email already exists. Please log in using your email and password.",
 						});
 					}
-
 					return done(null, user);
 				}
 

@@ -84,11 +84,45 @@ export async function loginSuccess(req, res) {
 	res.status(200).json({ accessToken: accessToken });
 }
 
+// Login with Google (passport is verifying email and password and saving user in req.user)
+// after google login, frontend would have to make an immediate req to /refresh-token to gain access token
+export async function googleLoginSuccess(req, res) {
+    // console.log(req.user);
+	// const accessToken = generateToken({ id: req.user._id, email: req.user.email });
+	const refreshToken = generateRefreshToken();
+
+    //Invalidate existing refresh tokens(comment this if you want to allow multiple device logins)
+    await RefreshToken.deleteMany({userId: req.user._id});
+
+	await RefreshToken.create({
+        userId: req.user._id,
+        tokenHash: refreshToken,
+        expiresAt: refreshTokenExpiry()
+    });
+    await User.updateOne({ _id: req.user._id }, { $set: { lastLoginAt: new Date() } });
+
+	// Send refresh token in HttpOnly cookie
+	res.cookie("refreshToken", refreshToken, {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production", // only https in prod
+		sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+		maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+	});
+
+	res.redirect(process.env.CLIENT_URL);
+}
+
 // Forgot password
 export async function forgotPassword(req, res) {
 	const { email } = req.body;
 	const user = await User.findOne({ email });
 	if (!user) return res.status(200).json({ message: "If an account exists for this email, an OTP has been sent." });
+
+    if (user.provider === "google" || !user.passwordHash) {
+        return res.status(200).json({
+            message: "If an account exists for this email, an OTP has been sent.",
+        });
+    }
 
     //Invalidate existing OTPs
     await OtpCode.deleteMany({userId: user._id, purpose: "reset_password"});
@@ -110,6 +144,12 @@ export async function resetPassword(req, res) {
 	const { email, otp, newPassword } = req.body;
 	const user = await User.findOne({ email });
 	if (!user) return res.status(400).json({ message: "Invalid user" });
+
+    if (user.provider === "google" || !user.passwordHash) {
+        return res.status(200).json({
+            message: "Invalid or expired OTP",
+        });
+    }
 
 	const otpRecord = await OtpCode.findOneAndDelete({
         userId: user._id,
@@ -135,6 +175,12 @@ export async function changePassword(req, res) {
 	// req.user comes from JWT (authMiddleware)
 	const user = await User.findOne({ email: req.user.email });
 	if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (!user.passwordHash || user.provider === "google") {
+        return res.status(400).json({
+            message: "This account uses Google sign-in. Password cannot be changed here.",
+        });
+    }
 
 	// Compare old password
 	const isMatch = await bcrypt.compare(oldPassword + pepper, user.passwordHash);
@@ -189,16 +235,18 @@ export async function logout(req, res) {
 
 // Delete User
 export async function deleteAccount(req, res) {
-    const { password } = req.body;
+    const { password, confirm } = req.body;
 
     // req.user comes from JWT (authMiddleware)
 	const user = await User.findOne({ email: req.user.email });
 	if (!user) return res.status(404).json({ message: "User not found" });
 
 	// Compare password
-	const isMatch = await bcrypt.compare(password + pepper, user.passwordHash);
-	if (!isMatch) {
-		return res.status(401).json({ message: "Password is incorrect" });
+	if (!user.passwordHash || user.provider === "google") {
+		if (confirm !== true) return res.status(400).json({ message: "Confirmation required to delete this account" });
+	} else {
+		const isMatch = await bcrypt.compare(password + pepper, user.passwordHash);
+		if (!isMatch) return res.status(401).json({ message: "Password is incorrect" });
 	}
 
 	await User.findOneAndDelete({_id: user._id}); //with cascade everything will be deleted
