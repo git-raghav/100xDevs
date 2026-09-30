@@ -1,4 +1,5 @@
 import User from "../models/userModel.js";
+import Account from "../models/accountModel.js";
 
 //Change name
 export async function changeName(req, res) {
@@ -34,20 +35,23 @@ export async function getUsersBulk(req, res) {
 	const filter = req.query.filter?.trim();
 	//Guard against empty searches
 	if (!filter) {
-		return res.status(404).json({ message: "Search filter is required" });
+		return res.status(400).json({ message: "Search filter is required" });
 	}
 	//Escape special regex characters to stop injection errors
 	const escapedFilter = filter.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-	//only retrieve first 20 users, and desired data if found not the whole data for every matched user
+    // Get users who have an account
+	const walletUserIds = await Account.distinct("userId");
+
+	//only retrieve first 20 users, and desired data if found not the whole data for every matched user, exclude yourself
 	const users = await User.find({
+		_id: { $ne: req.user.id, $in: walletUserIds },
 		$or: [
 			{ firstName: { $regex: `^${escapedFilter}`, $options: "i" } },
 			{ lastName: { $regex: `^${escapedFilter}`, $options: "i" } },
 			{ username: { $regex: `^${escapedFilter}`, $options: "i" } },
 		],
 	}).limit(20).select("username firstName lastName _id");
-	if (users.length === 0) return res.status(404).json({ message: "No users found" });
 
 	res.status(200).json({ users });
 }
