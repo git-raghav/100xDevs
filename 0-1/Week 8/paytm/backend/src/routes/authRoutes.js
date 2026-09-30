@@ -4,16 +4,17 @@ import passport from 'passport';
 import wrapAsync from '../utils/wrapAsync.js';
 import { validateUserSignup, validateVerifyEmail, validateUserLogin, validateForgetPassword, validateResetPassword, validateChangePassword, validateDeleteAccount } from '../middlewares/validationMiddleware.js';
 import { authenticateToken } from '../middlewares/authMiddleware.js';
+import { loginLimiter, otpLimiter } from "../middlewares/rateLimiter.js";
 import { signup, verifyEmail, loginSuccess, forgotPassword, resetPassword, changePassword, refreshToken, logout, deleteAccount, getMe } from '../controllers/authController.js';
 
-router.post('/signup', validateUserSignup, wrapAsync(signup));
-router.post('/verify-email', validateVerifyEmail, wrapAsync(verifyEmail));
+router.post('/signup', otpLimiter, validateUserSignup, wrapAsync(signup));
+router.post('/verify-email', otpLimiter, validateVerifyEmail, wrapAsync(verifyEmail));
 
-router.post('/login', validateUserLogin, passport.authenticate('local', { session: false, failWithError: true }), wrapAsync(loginSuccess));
+router.post('/login', loginLimiter, validateUserLogin, passport.authenticate('local', { session: false, failWithError: true }), wrapAsync(loginSuccess));
 router.post('/logout', wrapAsync(logout));
 
-router.post('/forgot-password', validateForgetPassword, wrapAsync(forgotPassword));
-router.post('/reset-password', validateResetPassword, wrapAsync(resetPassword));
+router.post('/forgot-password', otpLimiter, validateForgetPassword, wrapAsync(forgotPassword));
+router.post('/reset-password', otpLimiter, validateResetPassword, wrapAsync(resetPassword));
 router.post('/change-password', validateChangePassword, authenticateToken, wrapAsync(changePassword));
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
