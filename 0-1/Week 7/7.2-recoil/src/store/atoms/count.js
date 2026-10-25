@@ -6,6 +6,7 @@ export const evenDerivedAtom = atom((get) => get(countAtom) % 2 == 0);
 import { atomWithStorage } from "jotai/utils";
 const themeAtom = atomWithStorage("theme", "light");
 
+
 //Derived Atoms
 const priceAtom = atom(100);
 const quantityAtom = atom(3);

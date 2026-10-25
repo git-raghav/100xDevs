@@ -47,3 +47,6 @@ function Even() {
     )
 }
 export default App;
+
+//usestate vs atom
+//usetate should be used when u know variable is going to be used inside only that component or 1-2 childs, in short small usage and not shared between multiple components. when u need to share variable between multiple components, use atom. local/global req
