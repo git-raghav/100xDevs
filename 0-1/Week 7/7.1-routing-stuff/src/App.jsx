@@ -75,7 +75,7 @@ function CountRenderer() {
 }
 
 function Buttons() {
-    const {count, setCount} = useContext(CountContext);
+    const {setCount} = useContext(CountContext);
     return (
         <div>
             <button onClick={() => setCount(c => c+1)}>Increase</button>
