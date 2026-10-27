@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "jotai": "^3.0.1",
+    "jotai-family": "^1.1.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
