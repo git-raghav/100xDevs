@@ -1,10 +1,14 @@
+import { Suspense } from 'react';
 import { useAtomValue, useSetAtom, useAtom } from 'jotai'
 import "./App.css";
-import { countAtom, evenDerivedAtom } from "./store/atoms/count";
+import { countAtom, evenDerivedAtom, notificationAtom, fetchNotificationAtom2 } from "./store/atoms/count";
 function App() {
 	return (
 		<div>
             <Count />
+            {/* demonstration of async atom */}
+            <Suspense fallback={<p>Loading notification...</p>}><Noti /></Suspense>
+            <Suspense fallback={<p>Loading notification2...</p>}><Noti2 /></Suspense>
 		</div>
 	);
 }
@@ -46,6 +50,28 @@ function Even() {
         </div>
     )
 }
+
+//async read atom demo
+function Noti() {
+    const noti = useAtomValue(notificationAtom);
+    return <h2>{noti.notifications}</h2>;
+}
+
+//async write atom demo
+function Noti2() {
+    const [noti, fetchNoti] = useAtom(fetchNotificationAtom2);
+
+    return (
+        <div>
+            <button onClick={() => fetchNoti()}>
+                Load Notification
+            </button>
+
+            <h2>{noti?.notifications ?? "No notifications loaded yet"}</h2>
+        </div>
+    );
+}
+
 export default App;
 
 //usestate vs atom
