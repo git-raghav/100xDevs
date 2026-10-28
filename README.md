@@ -3,19 +3,19 @@
 
 ### 1. Foundation
 - [x] JavaScript fundamentals
-- [X] Asynchronous nature of JavaScript
-- [ ] Node.js and its runtime
+- [x] Asynchronous nature of JavaScript
+- [x] Node.js and its runtime
 - [ ] Databases (NoSQL/SQL)
-- [ ] MongoDB deep dive
+- [x] MongoDB deep dive
 - [ ] PostgreSQL deep dive
 - [ ] TypeScript: beginner to advanced
 
 ### 2. Backend
 - [ ] Backend communication protocols
-- [ ] Express: basic to advanced
+- [x] Express: basic to advanced
 - [ ] ORMs
-- [ ] Middlewares, routes, status codes, global error handlers
-- [ ] Zod
+- [x] Middlewares, routes, status codes, global error handlers
+- [x] Zod
 - [ ] Monorepos and Turborepo
 - [ ] Serverless backends
 - [ ] OpenAPI Specification
@@ -25,17 +25,17 @@
 - [ ] Deploying npm packages
 
 ### 3. Frontend
-- [ ] Reconciliation and frontend frameworks
-- [ ] React: beginner to advanced
-- [ ] Internals of state and Context API
-- [ ] State management using Recoil (or a modern alternative)
-- [ ] Essential CSS
-- [ ] Flexbox and basic styling
-- [ ] Frontend UI frameworks
-- [ ] Tailwind CSS deep dive
+- [x] Reconciliation and frontend frameworks
+- [x] React: beginner to advanced
+- [x] Internals of state and Context API
+- [x] State management using Recoil (or a modern alternative)
+- [x] Essential CSS
+- [x] Flexbox and basic styling
+- [x] Frontend UI frameworks
+- [x] Tailwind CSS deep dive
 - [ ] Containerization with Docker
 - [ ] Next.js
-- [ ] Custom React hooks
+- [x] Custom React hooks
 - [ ] In-house authentication using NextAuth.js / Auth.js
 
 ### 4. Basic DevOps
