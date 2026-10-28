@@ -2,8 +2,8 @@
 ## Phase 1: 0 to 1 — Foundations
 
 ### 1. Foundation
-- [ ] JavaScript fundamentals
-- [ ] Asynchronous nature of JavaScript
+- [x] JavaScript fundamentals
+- [X] Asynchronous nature of JavaScript
 - [ ] Node.js and its runtime
 - [ ] Databases (NoSQL/SQL)
 - [ ] MongoDB deep dive
