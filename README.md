@@ -5,15 +5,15 @@
 - [x] JavaScript fundamentals
 - [x] Asynchronous nature of JavaScript
 - [x] Node.js and its runtime
-- [ ] Databases (NoSQL/SQL)
+- [x] Databases (NoSQL/SQL)
 - [x] MongoDB deep dive
-- [ ] PostgreSQL deep dive
-- [ ] TypeScript: beginner to advanced
+- [x] PostgreSQL deep dive
+- [x] TypeScript: beginner to advanced
 
 ### 2. Backend
 - [ ] Backend communication protocols
 - [x] Express: basic to advanced
-- [ ] ORMs
+- [x] ORMs
 - [x] Middlewares, routes, status codes, global error handlers
 - [x] Zod
 - [ ] Monorepos and Turborepo
