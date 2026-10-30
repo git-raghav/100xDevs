@@ -261,3 +261,34 @@ doSomething3(Direction2.Up);
 //   // and so on...
 //   res.status(ResponseStatus.Success).json({});
 // })
+
+
+//GENERICS
+type Input = number | string; //type Input2 = number[] | string[];
+function firstElement(arr: Input[]){
+  return arr[0];
+}
+const value = firstElement(["vishal","singh", 3]); //can send different types of values in inputs, without any type errors ~ this is a problem
+// console.log(value.toUpperCase()); //error as toUpperCase cannot be done in case if Input is number
+// console.log(value.toString().toUpperCase()); //will work
+// if (typeof value === 'string') { //will work
+//   console.log(value.toUpperCase());
+// }
+
+function identity<T>(arg: T): T {
+  return arg;
+}
+let output1 = identity<string>("myString");
+let output2 = identity<number>(100);
+console.log(output1.toUpperCase());
+
+function getFirstElement<T>(arr: T[]): T {
+  return arr[0];
+}
+interface User99 {
+  name: String
+}
+const e14 = getFirstElement<User99>([{name:"Vishal Singh"}, {name:"raghav"}]);
+// console.log(e14.toLowerCase());
+console.log(e14);
+console.log(e14.name);
