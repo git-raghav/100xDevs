@@ -1,4 +1,20 @@
 # 100xDevs
+
+## Week Index
+
+| Week | Topics |
+|---|---|
+| Week 1 | JavaScript fundamentals, async JavaScript |
+| Week 2 | Node.js, Express, Git |
+| Week 3 | Middleware, Zod, fetch, JWT, error handling |
+| Week 4 | DOM, React foundations, MongoDB |
+| Week 5 | React |
+| Week 6 | React deep dive, hooks |
+| Week 7 | Routing, Context API, Jotai, Prop drilling |
+| Week 8 | Tailwind CSS, Paytm, Axios vs. Fetch |
+| Week 9 | Custom hooks, TypeScript |
+| Week 10 | Postgres, Prisma |
+
 ## Phase 1: 0 to 1 — Foundations
 
 ### 1. Foundation
