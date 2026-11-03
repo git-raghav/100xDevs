@@ -1,0 +1,9 @@
+week 8 - axios, frontend
+week 9 - ts
+
+w3school
+js
+react
+ts
+node.js
+git
