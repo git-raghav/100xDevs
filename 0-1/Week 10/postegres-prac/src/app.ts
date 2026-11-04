@@ -1,5 +1,5 @@
 import pool from "./config/db.js";
-import { createUsersTable, getAllUsers } from "./models/userModel.js";
+import { createUsersTable, getAllUsers, createUser, findUserByEmail } from "./models/userModel.js";
 
 // connecting to DB
 async function connect() {
@@ -15,3 +15,5 @@ async function connect() {
 connect();
 // createUsersTable();
 // getAllUsers();
+// createUser({ username: "test", email: "test", password: "test" });
+// findUserByEmail("test");
