@@ -1,5 +1,4 @@
 week 8 - axios, frontend
-week 9 - ts advance
 
 w3school
 js
