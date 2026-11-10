@@ -1,4 +1,6 @@
 week 8 - axios, frontend
+week 10 prisma build issue ts, pg and prisma pdf
+
 
 w3school
 js
